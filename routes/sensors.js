@@ -5,7 +5,7 @@ var router = express.Router();
 router.get('/:sensor', function(req, res, next) {
 //  res.json(req.params);
   var sensorName = req.params.sensor;
-  console.log(sensorName);
+  console.log("Sensor type: " sensorName);
   res.send(sensorName);
 });
 

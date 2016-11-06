@@ -11,29 +11,113 @@
 </head>
 <body>
 	<header>
-      <div class = "row">
-        <div class = "col-sm-8">
-          <h1 id="heading">!Multi Purpose Assitant</h1>
-        </div>
-
-        <div class = "col-sm-4">
-          <button class="btn btn-primary" id="toggle" onclick="changeText()"> Click to change text </button>
-        </div>
-
-      </div>
+		Multi Purpose Assitant
   </header>
 
-  <footer>
+	<p class = "introdution">
+		The multi purpose assistant is at your service!
+	</p>
 
+ <section class = "sensor-funcitonality">
+	<div class="row sensors">
+		<div class = "col-sm-5 sensor-item">
+			<p class = "sensor-heading">
+				Temperature Sensor
+			</p>
+
+			<div class = "sensor-content">
+				<p> The temperature sensor measures the temperature output of the surrounding region. It may be used to monitor plant health, monitor high-low temperature for health conditions.
+			</div>
+
+		</br>
+		<h4> Sensor Value </h4>
+		<div class="sensor-value">
+		</div>
+		<button class ="btn btn-primary" onclick="getTemperature()"> Get Reading now! </button>
+
+		<div class = "analysis-box">
+			<ul>
+				<li> Stage: <span id="temperatureState">SAFE!</span></li>
+				<li> Last updated: Timestamp value</li>
+			</ul>
+		</div>
+
+		</div>
+
+		<div class = "col-sm-5 sensor-item">
+			<div class = "sensor-heading">
+				Proximity Sensor
+			</div>
+			<div class = "sensor-content">
+				<p> The proximity sensor measures the proximity of a unwanted entity in the surrounding region. It may be used to detect undesired activity in a region or protect food from mosquitoes.
+			</div>
+	  	</br>
+			<h4> Sensor Value </h4>
+			<div class="sensor-value">
+			</div>
+			<button class ="btn btn-primary" onclick="getProximity()"> Get Reading now! </button>
+
+			<div class = "analysis-box">
+				<ul>
+					<li> Stage: <span id="proximityState">CRITICAL!</span></li>
+					<li> Last updated: Timestamp value</li>
+				</ul>
+			</div>
+
+		</div>
+	</div>
+
+</section>
+
+<section class = "fun-time">
+
+	<div class="row sensors">
+		<div class = "col-sm-5 sensor-item">
+			<div class = "sensor-heading">
+				Send a message!
+			</div>
+			<div class = "sensor-content">
+				<p> Send a message using the Intel Edison. Just type in the message below!
+			</div>
+
+			<div class="form-group">
+			  <label for="message">Message</label>
+			  <input type="text" class="form-control" id="message">
+			</div>
+			<div class="form-group">
+			  <label for="phone">Mobile number:</label>
+			  <input type="number" class="form-control" id="phone">
+			</div>
+			<button class ="btn btn-primary" id = "sendSMS" onclick="sendMessage()"> Send SMS!</button>
+		</div>
+	</div>
+
+  <footer>
+		<div class = "row">
+
+			<div class = "col-sm-4">
+				&copy; Copyright 2016 @sahiljain112
+			</div>
+
+			<ul class="col-sm-8">
+        <li class="col-sm-1">
+        </li>
+        <li class="col-sm-1">
+        </li>
+        <li class="col-sm-1">
+        </li>
+      </ul>
+
+		</div>
   </footer>
 	<script>
 
-	function changeText(){
+	function getTemperature(){
 
 		fetch('http://localhost:3000/query/temperature')
 		.then(function(response){
 		  console.log("hello");
-		  document.getElementById('heading').innerHTML = "Hello tomorrow!";
+		  document.querySelector('header').innerHTML = "Hello tomorrow!";
 		}).catch(function(error){
 		  console.log(error);
 		});
@@ -43,6 +127,9 @@
 
 	}
 
+	function sendMessage() {
+
+	}
 	</script>
   <script src = "/javascripts/jquery-3.1.1.min.js"/>
   <script src = "/javascripts/bootstrap.min.js" />
