@@ -8,17 +8,16 @@
   <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
   <link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap-theme.min.css">
-
 </head>
 <body>
 	<header>
       <div class = "row">
         <div class = "col-sm-8">
-          Multi Purpose Assitant
+          <h1 id="heading">!Multi Purpose Assitant</h1>
         </div>
 
-        <nav class = "col-sm-4">
-          <li>
+        <div class = "col-sm-4">
+          <button class="btn btn-primary" id="toggle" onclick="changeText()"> Click to change text </button>
         </div>
 
       </div>
@@ -27,8 +26,26 @@
   <footer>
 
   </footer>
+	<script>
 
-  <script src = "/javascripts/jquery-3.1.1.min.js" />
+	function changeText(){
+
+		fetch('http://localhost:3000/query/temperature')
+		.then(function(response){
+		  console.log("hello");
+		  document.getElementById('heading').innerHTML = "Hello tomorrow!";
+		}).catch(function(error){
+		  console.log(error);
+		});
+	}
+
+	function getProximity() {
+
+	}
+
+	</script>
+  <script src = "/javascripts/jquery-3.1.1.min.js"/>
   <script src = "/javascripts/bootstrap.min.js" />
+
 </body>
 </html>
