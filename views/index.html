@@ -128,8 +128,32 @@
 	}
 
 	function sendMessage() {
+		var number = document.getElementById('phone');
+		var message = document.getElementById('message');
+		console.log(number.value + " " +message.value);
+		console.log('Requesting server to send SMS');
 
+		var numberVal = number.value;
+		var messageVal = message.value;
+
+		fetch('http://localhost:3000/query/message', {
+			method: 'post',
+			body: JSON.stringify({
+				number: numberVal,
+				message: messageVal
+			})
+		})
+		.then(function(response){
+			console.log(response.json());
+			alert('Message sent successfully!');
+
+		}).catch(function(error){
+			console.log(error);
+			alert('Failed! Try Again!');
+		});
+		console.log('Server response complete');
 	}
+
 	</script>
   <script src = "/javascripts/jquery-3.1.1.min.js"/>
   <script src = "/javascripts/bootstrap.min.js" />
