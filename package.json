@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "hello": "DEBUG=myapp:* npm start",
+    "debug": "DEBUG=myapp:* npm start",
     "start": "node ./bin/www"
   },
   "dependencies": {

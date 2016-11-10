@@ -22,20 +22,21 @@ router.all('/:sensor', function(req, res, next) {
     jsonResponse.value = temp;
     jsonResponse.timeStamp = new Date().getTime();
     if(temp <= 15 || temp > 45)
-      jsonResponse.state = 'CRITICAL';
+      jsonResponse.tempState = 'CRITICAL';
     if((temp > 15 && temp < 20) || (temp > 35 && temp <= 45))
-      jsonResponse.state = 'WARNING';
+      jsonResponse.tempState = 'WARNING';
 
+      console.log('Temperature JSON ', jsonResponse);
   };
 
   var returnProximity = function() {
-    var temp = utility.getProximity();
+    var proxValue = utility.getProximity();
     jsonResponse.value = temp;
     jsonResponse.timeStamp = new Date().getTime();
-    if(temp <= 15 || temp > 45)
-      jsonResponse.state = 'CRITICAL';
-    if((temp > 15 && temp < 20) || (temp > 35 && temp <= 45))
-      jsonResponse.state = 'WARNING';
+    if(proxValue === 1)
+      jsonResponse.proximityState = 'UNSAFE';
+
+    console.log('Proximity JSON ', jsonResponse);
 
   };
 
@@ -44,6 +45,10 @@ router.all('/:sensor', function(req, res, next) {
     res.json(jsonResponse);
   }
   else if(param === 'proximity'){
+    returnProximity();
+    res.json(jsonResponse);
+  }
+  else if(param === 'sound'){
 
   }
   else if(param === 'update'){
@@ -56,6 +61,5 @@ router.all('/:sensor', function(req, res, next) {
   }
 
 });
-
 
 module.exports = router;

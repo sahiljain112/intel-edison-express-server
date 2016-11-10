@@ -32,13 +32,14 @@
 		</br>
 		<h4> Sensor Value </h4>
 		<div class="sensor-value">
+			<span id = "temperatureValue"> 50!</span>
 		</div>
 		<button class ="btn btn-primary" onclick="getTemperature()"> Get Reading now! </button>
 
 		<div class = "analysis-box">
 			<ul>
 				<li> Stage: <span id="temperatureState">SAFE!</span></li>
-				<li> Last updated: Timestamp value</li>
+				<li> Last updated: <span id="temperatureTimestamp"> </span> </li>
 			</ul>
 		</div>
 
@@ -54,13 +55,14 @@
 	  	</br>
 			<h4> Sensor Value </h4>
 			<div class="sensor-value">
+				<span id = "proximityValue"> 50! </span>
 			</div>
 			<button class ="btn btn-primary" onclick="getProximity()"> Get Reading now! </button>
 
 			<div class = "analysis-box">
 				<ul>
 					<li> Stage: <span id="proximityState">CRITICAL!</span></li>
-					<li> Last updated: Timestamp value</li>
+					<li> Last updated: <span id="proximityTimestamp"> </span> </li>
 				</ul>
 			</div>
 
@@ -72,6 +74,7 @@
 <section class = "fun-time">
 
 	<div class="row sensors">
+
 		<div class = "col-sm-5 sensor-item">
 			<div class = "sensor-heading">
 				Send a message!
@@ -90,7 +93,33 @@
 			</div>
 			<button class ="btn btn-primary" id = "sendSMS" onclick="sendMessage()"> Send SMS!</button>
 		</div>
+
+		<div class = "col-sm-5 sensor-item">
+			<div class = "sensor-heading">
+				Sound Detection Module
+			</div>
+			<div class = "sensor-content">
+				<p> The sound detection module can detect sounds nearby. This can be used to trigger various events.
+			</div>
+			</br>
+			<h4> Sensor Value </h4>
+			<div class="sensor-value">
+				<span id = "soundValue"> 50! </span>
+			</div>
+			<button class ="btn btn-primary" onclick="getSound()"> Get Reading now! </button>
+
+			<div class = "analysis-box">
+				<ul>
+					<li> Stage: <span id="soundState">CRITICAL!</span></li>
+					<li> Last updated: <span id="soundTimestamp"> </span> </li>
+				</ul>
+			</div>
+
+		</div>
+
 	</div>
+
+</section>
 
   <footer>
 		<div class = "row">
@@ -112,19 +141,52 @@
   </footer>
 	<script>
 
+  //window.setInterval(updateAll,60000);
+
+	function updateAll(){
+		getTemperature();
+		getProximity();
+		getSound();
+	}
+
 	function getTemperature(){
 
 		fetch('http://localhost:3000/query/temperature')
 		.then(function(response){
-		  console.log("hello");
-		  document.querySelector('header').innerHTML = "Hello tomorrow!";
+			return response.json();
+		})
+		.then(function(response){
+		  console.log("Temperature sensor");
+		  // document.querySelector('header').innerHTML = "Hello tomorrow!";
+			document.getElementById('temperatureTimestamp') = response.timeStamp;
+			document.getElementById('temperatureState') = response.tempState;
+			document.getElementById('temperatureValue') = response.tempValue;
+
 		}).catch(function(error){
 		  console.log(error);
 		});
 	}
 
 	function getProximity() {
+		fetch('http://localhost:3000/query/proximity')
+		.then(function(response){
+			return response.json();
+		})
+		.then(function(response){
+			console.log("Proximity sensor");
+		//	document.querySelector('header').innerHTML = "Hello tomorrow!";
+			document.getElementById('proximityTimestamp') = response.timeStamp;
+			document.getElementById('proximityState') = response.proximityState;
+			document.getElementById('proximityValue') = response.proximityValue;
 
+		}).catch(function(error){
+			alert('Error');
+			console.log(error);
+		});
+	}
+
+	function getSound() {
+		// Yet to be implemented
 	}
 
 	function sendMessage() {
