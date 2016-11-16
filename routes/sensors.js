@@ -10,17 +10,16 @@ var jsonResponse = {
   timeStamp: dateFormat(new Date(), "dddd, mmmm dS, yyyy, h:MM:ss TT"),
   tempState: 'SAFE',
   proximityState: 'SAFE'
-}
+};
 
-/* GET home page. */
 router.get('/:sensor', function(req, res, next) {
 //  res.json(req.params);
   var param = req.params.sensor;
   console.log("Param type: " + param);
   //res.send(param);
-  var returnTemp = function() {
-    var temp = utility.getTemperature();
-    jsonResponse.tempValue = temp;
+  var tempValues = function(temp) {
+  //  var temp = utility.getTemperature();
+    jsonResponse.tempValue = temp.toFixed(2);
     jsonResponse.timeStamp = dateFormat(new Date(), "dddd, mmmm dS, yyyy, h:MM:ss TT");
     if(temp <= 15 || temp > 45)
       jsonResponse.tempState = 'CRITICAL';
@@ -29,27 +28,45 @@ router.get('/:sensor', function(req, res, next) {
 
   };
 
-  var returnProximity = function() {
-    var proxValue = utility.getProximity();
-    jsonResponse.proximityValue = proxValue;
+  var proxValues = function(proxValue) {
+//    var proxValue = utility.getProximity();
+    jsonResponse.proximityValue = proxValue.toFixed(2);
     jsonResponse.timeStamp = dateFormat(new Date(), "dddd, mmmm dS, yyyy, h:MM:ss TT");
     if(proxValue === 1)
       jsonResponse.proximityState = 'UNSAFE';
 
   };
 
+  var aggValues = function(){
+    var aggProx = utility.getAggregatedProximity();
+    var aggTemp = utility.getAggregatedTemperature();
+    tempValues(aggTemp);
+    proxValues(aggProx);
+    utility.resetValues();
+
+  };
+
   if(param === 'temperature'){
-    returnTemp();
+
+    var temp = utility.getTemperature();
+    tempValues();
     console.log('Temperature JSON ', jsonResponse);
     res.send(jsonResponse);
   }
   else if(param === 'proximity'){
-    returnProximity();
+
+    var prox = utility.getProximity();
+    proxValues(prox);
     console.log('Proximity JSON ', jsonResponse);
     res.send(jsonResponse);
   }
   else if(param === 'sound'){
 
+  }
+  else if(param === 'update'){
+    aggValues();
+    console.log('Approx JSON ', jsonResponse);
+    res.send(jsonResponse);
   }
   else if(param === 'message'){
     console.log(req.body);

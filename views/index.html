@@ -9,7 +9,7 @@
   <link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap-theme.min.css">
 </head>
-<body>
+<body onload="updateAll()">
 	<header>
 		Multi Purpose Assitant
   </header>
@@ -32,13 +32,13 @@
 		</br>
 		<h4> Sensor Value </h4>
 		<div class="sensor-value">
-			<span id = "temperatureValue"> 50!</span>
+			<span id = "temperatureValue"> Null!</span>
 		</div>
 		<button class ="btn btn-primary" onclick="getTemperature()"> Get Reading now! </button>
 
 		<div class = "analysis-box">
 			<ul>
-				<li> Stage: <span id="temperatureState">SAFE!</span></li>
+				<li> State: <span id="temperatureState">Null!</span></li>
 				<li> Last updated: <span id="temperatureTimestamp"> </span> </li>
 			</ul>
 		</div>
@@ -55,13 +55,13 @@
 	  	</br>
 			<h4> Sensor Value </h4>
 			<div class="sensor-value">
-				<span id = "proximityValue"> 50! </span>
+				<span id = "proximityValue"> Null!</span>
 			</div>
 			<button class ="btn btn-primary" onclick="getProximity()"> Get Reading now! </button>
 
 			<div class = "analysis-box">
 				<ul>
-					<li> Stage: <span id="proximityState">CRITICAL!</span></li>
+					<li> State: <span id="proximityState">CRITICAL!</span></li>
 					<li> Last updated: <span id="proximityTimestamp"> </span> </li>
 				</ul>
 			</div>
@@ -104,13 +104,13 @@
 			</br>
 			<h4> Sensor Value </h4>
 			<div class="sensor-value">
-				<span id = "soundValue"> 50! </span>
+				<span id = "soundValue"> Null! </span>
 			</div>
 			<button class ="btn btn-primary" onclick="getSound()"> Get Reading now! </button>
 
 			<div class = "analysis-box">
 				<ul>
-					<li> Stage: <span id="soundState">CRITICAL!</span></li>
+					<li> State: <span id="soundState">CRITICAL!</span></li>
 					<li> Last updated: <span id="soundTimestamp"> </span> </li>
 				</ul>
 			</div>
@@ -141,43 +141,41 @@
   </footer>
 	<script>
 
-  //window.setInterval(updateAll,4000);
-
-	function updateAll(){
-		getTemperature();
-		getProximity();
-//		getSound();
-	}
+  window.setInterval(updateAll,10000);
 
     function getIP(){
         return 'localhost'; // Can be changed later.
-}
-	function getTemperature(){
+    }
+
+		function updateAll(){
+			var ip = getIP();
+			fetch('http://' + ip + ':3000/query/update')
+			 .then(function(response){
+				return response.json();
+			}).then(function(response){
+
+					console.log("All update response:");
+				  console.log(response);
+					tempUpdate(response);
+					proxUpdate(response);
+
+			}).catch(function(error){
+	          alert('Error');
+			  console.log(error);
+			});
+		}
+
+	 function getTemperature(){
     var ip = getIP();
 		fetch('http://' + ip + ':3000/query/temperature')
 		 .then(function(response){
 			return response.json();
 		 })
-        .then(function(response){
-		  console.log("Temperature sensor");
-            console.log(response);
-		   // document.querySelector('header').innerHTML = "Hello tomorrow!";
-			document.getElementById('temperatureTimestamp').innerHTML = response.timeStamp;
-			document.getElementById('temperatureState').innerHTML = response.tempState;
-			var myElement = document.querySelector("#temperatureState");
-			if(response.tempState === 'CRITICAL'){
-					myElement.style.color = '#F00';
-			}
-			else if(response.tempState === 'SAFE'){
-				myElement.style.color = '#0F0';
-			}
-			else if(response.tempState === 'WARNING'){
-				myElement.style.color = '#f0ad4e';
-			}
-			else {
+    .then(function(response){
 
-			}
-			document.getElementById('temperatureValue').innerHTML = response.tempValue;
+				 console.log("Temperature sensor");
+         console.log(response);
+				 tempUpdate(response);
 
 		}).catch(function(error){
           alert('Error');
@@ -194,22 +192,44 @@
 		.then(function(response){
 			console.log("Proximity sensor");
 			console.log(response);
-		//	document.querySelector('header').innerHTML = "Hello tomorrow!";
-			document.getElementById('proximityTimestamp').innerHTML = response.timeStamp;
-			document.getElementById('proximityState').innerHTML = response.proximityState;
-			var myElement = document.querySelector("#proximityState");
-			if(response.proximityState === 'UNSAFE'){
-					myElement.style.color = '#F00';
-			}
-			else if(response.proximityState === 'SAFE'){
-				myElement.style.color = '#5cb85c';
-			}
-			document.getElementById('proximityValue').innerHTML = response.proximityValue;
+			proxUpdate(response);
 
 		}).catch(function(error){
 			alert('Error');
 			console.log(error);
 		});
+	}
+
+	function tempUpdate(response) {
+
+		 document.getElementById('temperatureTimestamp').innerHTML = response.timeStamp;
+		 document.getElementById('temperatureState').innerHTML = response.tempState;
+		 var myElement = document.querySelector("#temperatureState");
+		 if(response.tempState === 'CRITICAL'){
+				 myElement.style.color = '#F00';
+		 }
+		 else if(response.tempState === 'SAFE'){
+			 myElement.style.color = '#5cb85c';
+		 }
+		 else if(response.tempState === 'WARNING'){
+			 myElement.style.color = '#f0ad4e';
+		 }
+		 document.getElementById('temperatureValue').innerHTML = response.tempValue;
+
+	}
+
+	function proxUpdate(response) {
+
+		document.getElementById('proximityTimestamp').innerHTML = response.timeStamp;
+		document.getElementById('proximityState').innerHTML = response.proximityState;
+		var myElement = document.querySelector("#proximityState");
+		if(response.proximityState === 'UNSAFE'){
+				myElement.style.color = '#F00';
+		}
+		else if(response.proximityState === 'SAFE'){
+			myElement.style.color = '#5cb85c';
+		}
+		document.getElementById('proximityValue').innerHTML = response.proximityValue;
 	}
 
 	function getSound() {

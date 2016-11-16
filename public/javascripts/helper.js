@@ -14,7 +14,7 @@ var credentials = require('./token.js');
 // var tempPin = new mraa.Aio(0); //setup access analog input Analog pin #0 for temperature sensing!
 // var buzzerPin = new mraa.Gpio(12);
 // var proximity = new mraa.Gpio(0);
-// var stepCount = 0, avgTemp = 0, avgProximity = 0;     // Measured as 0,1!
+ var stepCount = 0, avgTemp = 0, avgProximity = 0;     // Measured as 0,1!
 
 var utility = {
 
@@ -22,7 +22,7 @@ var utility = {
     // var analogValue = tempPin.read() * 0.004882814;
     // return ((analogValue - 0.5) * 100);
 
-    return 1;
+    return Math.floor((Math.random() * 20) + 10);
   },
 
   getProximity: function() {
@@ -31,7 +31,7 @@ var utility = {
     //    buzzerPin.write(1);
     // return proximityValue;
 
-    return 0;
+    return Math.floor((Math.random() * 100))%2;
   },
 
   getAggregatedProximity: function() {
@@ -43,11 +43,11 @@ var utility = {
   },
 
   setAggregatedTemperature: function () {
-    avgTemp = avgTemp + getTemperature();
+    avgTemp = avgTemp + utility.getTemperature();
   },
 
-  setAverageProximity: function() {
-    avgProximity = aveProximity + getProximity();
+  setAggregatedProximity: function() {
+    avgProximity = avgProximity + utility.getProximity();
     stepCount = stepCount + 1;
   },
 
@@ -56,5 +56,8 @@ var utility = {
   }
 
 }
+
+setInterval(utility.setAggregatedTemperature,2000);
+setInterval(utility.setAggregatedProximity,2000);
 
 module.exports = utility;
