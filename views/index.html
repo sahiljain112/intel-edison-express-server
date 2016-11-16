@@ -151,7 +151,7 @@
 
     function getIP(){
         return 'localhost'; // Can be changed later.
-
+}
 	function getTemperature(){
     var ip = getIP();
 		fetch('http://' + ip + ':3000/query/temperature')
@@ -164,6 +164,19 @@
 		   // document.querySelector('header').innerHTML = "Hello tomorrow!";
 			document.getElementById('temperatureTimestamp').innerHTML = response.timeStamp;
 			document.getElementById('temperatureState').innerHTML = response.tempState;
+			var myElement = document.querySelector("#temperatureState");
+			if(response.tempState === 'CRITICAL'){
+					myElement.style.color = '#F00';
+			}
+			else if(response.tempState === 'SAFE'){
+				myElement.style.color = '#0F0';
+			}
+			else if(response.tempState === 'WARNING'){
+				myElement.style.color = '#f0ad4e';
+			}
+			else {
+
+			}
 			document.getElementById('temperatureValue').innerHTML = response.tempValue;
 
 		}).catch(function(error){
@@ -184,6 +197,13 @@
 		//	document.querySelector('header').innerHTML = "Hello tomorrow!";
 			document.getElementById('proximityTimestamp').innerHTML = response.timeStamp;
 			document.getElementById('proximityState').innerHTML = response.proximityState;
+			var myElement = document.querySelector("#proximityState");
+			if(response.proximityState === 'UNSAFE'){
+					myElement.style.color = '#F00';
+			}
+			else if(response.proximityState === 'SAFE'){
+				myElement.style.color = '#5cb85c';
+			}
 			document.getElementById('proximityValue').innerHTML = response.proximityValue;
 
 		}).catch(function(error){
@@ -204,11 +224,11 @@
 
 		var numberVal = number.value;
 		var messageVal = message.value;
-		var data = new FormData();
-     data.append( "json", JSON.stringify({
-			 number: numberVal,
-			 message: messageVal
-		 }));
+		// var data = new FormData();
+    //  data.append( "json", JSON.stringify({
+		// 	 number: numberVal,
+		// 	 message: messageVal
+		//  }));
         var ip = getIP();
 		fetch('http://'+ ip +':3000/query/message/' + numberVal + '/' + messageVal, {
 			method: 'post'

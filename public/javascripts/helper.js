@@ -7,14 +7,14 @@
 
 var express = require('express');
 var credentials = require('./token.js');
-var mraa = require('mraa'); //require mraa
+//var mraa = require('mraa'); //require mraa
 
-console.log('MRAA Version: ' + mraa.getVersion());
-
-var tempPin = new mraa.Aio(0); //setup access analog input Analog pin #0 for temperature sensing!
-var buzzerPin = new mraa.Gpio(12);
-var proximity = new mraa.Gpio(0);
-var stepCount = 0, avgTemp = 0, avgProximity = 0;     // Measured as 0,1!
+// console.log('MRAA Version: ' + mraa.getVersion());
+//
+// var tempPin = new mraa.Aio(0); //setup access analog input Analog pin #0 for temperature sensing!
+// var buzzerPin = new mraa.Gpio(12);
+// var proximity = new mraa.Gpio(0);
+// var stepCount = 0, avgTemp = 0, avgProximity = 0;     // Measured as 0,1!
 
 var utility = {
 
