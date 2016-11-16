@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Basic HTML</title>
+	<title>Intel Edison Web Server Project</title>
 	<meta charset="utf-8" name="viewport", content="width=device-width", initial-scale="1"/>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
@@ -141,43 +141,50 @@
   </footer>
 	<script>
 
-  //window.setInterval(updateAll,60000);
+  //window.setInterval(updateAll,4000);
 
 	function updateAll(){
 		getTemperature();
 		getProximity();
-		getSound();
+//		getSound();
 	}
 
-	function getTemperature(){
+    function getIP(){
+        return 'localhost'; // Can be changed later.
 
-		fetch('http://localhost:3000/query/temperature')
-		.then(function(response){
+	function getTemperature(){
+    var ip = getIP();
+		fetch('http://' + ip + ':3000/query/temperature')
+		 .then(function(response){
 			return response.json();
-		})
-		.then(function(response){
+		 })
+        .then(function(response){
 		  console.log("Temperature sensor");
-		  // document.querySelector('header').innerHTML = "Hello tomorrow!";
-			document.getElementById('temperatureTimestamp') = response.timeStamp;
-			document.getElementById('temperatureState') = response.tempState;
-			document.getElementById('temperatureValue') = response.tempValue;
+            console.log(response);
+		   // document.querySelector('header').innerHTML = "Hello tomorrow!";
+			document.getElementById('temperatureTimestamp').innerHTML = response.timeStamp;
+			document.getElementById('temperatureState').innerHTML = response.tempState;
+			document.getElementById('temperatureValue').innerHTML = response.tempValue;
 
 		}).catch(function(error){
+          alert('Error');
 		  console.log(error);
 		});
 	}
 
 	function getProximity() {
-		fetch('http://localhost:3000/query/proximity')
-		.then(function(response){
+		var ip = getIP();
+		fetch('http://' + ip + ':3000/query/proximity')
+        .then(function(response){
 			return response.json();
 		})
 		.then(function(response){
 			console.log("Proximity sensor");
+			console.log(response);
 		//	document.querySelector('header').innerHTML = "Hello tomorrow!";
-			document.getElementById('proximityTimestamp') = response.timeStamp;
-			document.getElementById('proximityState') = response.proximityState;
-			document.getElementById('proximityValue') = response.proximityValue;
+			document.getElementById('proximityTimestamp').innerHTML = response.timeStamp;
+			document.getElementById('proximityState').innerHTML = response.proximityState;
+			document.getElementById('proximityValue').innerHTML = response.proximityValue;
 
 		}).catch(function(error){
 			alert('Error');
@@ -197,16 +204,17 @@
 
 		var numberVal = number.value;
 		var messageVal = message.value;
-
-		fetch('http://localhost:3000/query/message', {
-			method: 'post',
-			body: JSON.stringify({
-				number: numberVal,
-				message: messageVal
-			})
+		var data = new FormData();
+     data.append( "json", JSON.stringify({
+			 number: numberVal,
+			 message: messageVal
+		 }));
+        var ip = getIP();
+		fetch('http://'+ ip +':3000/query/message/' + numberVal + '/' + messageVal, {
+			method: 'post'
 		})
 		.then(function(response){
-			console.log(response.json());
+			console.log(response);
 			alert('Message sent successfully!');
 
 		}).catch(function(error){
