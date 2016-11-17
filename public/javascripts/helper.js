@@ -7,14 +7,15 @@
 
 var express = require('express');
 var credentials = require('./token.js');
-//var mraa = require('mraa'); //require mraa
+var mraa = require('mraa'); //require mraa
 
-// console.log('MRAA Version: ' + mraa.getVersion());
-//
-// var tempPin = new mraa.Aio(0); //setup access analog input Analog pin #0 for temperature sensing!
-// var buzzerPin = new mraa.Gpio(12);
-// var proximity = new mraa.Gpio(0);
- var stepCount = 0, avgTemp = 0, avgProximity = 0;     // Measured as 0,1!
+console.log('MRAA Version: ' + mraa.getVersion());
+
+var tempPin = new mraa.Aio(0); //setup access analog input Analog pin #0 for temperature sensing!
+var buzzerPin = new mraa.Gpio(12);
+var proximity = new mraa.Gpio(2);
+var soundPin = new mraa.Aio(X);
+var stepCount = 0, avgTemp = 0, avgSound = 0, avgProximity = 0;     // Measured as 0,1!
 
 var utility = {
 
@@ -31,7 +32,17 @@ var utility = {
     //    buzzerPin.write(1);
     // return proximityValue;
 
-    return Math.floor((Math.random() * 100))%2;
+   return Math.floor((Math.random() * 100))%2;
+  },
+
+  getSound : function() {
+      // Read about sound detection sensor and implement!
+    return Math.floor((Math.random() * 2));
+
+  },
+
+  getAggregatedSound: function() {
+    return avgSound/stepCount;
   },
 
   getAggregatedProximity: function() {
@@ -40,6 +51,10 @@ var utility = {
 
   getAggregatedTemperature: function() {
     return avgTemp/stepCount;
+  },
+
+  setAggregatedSound: function() {
+    avgSound = avgSound + utility.getSound();
   },
 
   setAggregatedTemperature: function () {
@@ -52,12 +67,13 @@ var utility = {
   },
 
   resetValues: function() {
-    avgProximity = avgTemp = stepCount = 0;
+    avgProximity = avgTemp = avgSound = stepCount = 0;
   }
 
 }
 
 setInterval(utility.setAggregatedTemperature,2000);
 setInterval(utility.setAggregatedProximity,2000);
+setInterval(utility.setAggregatedSound,2000);
 
 module.exports = utility;

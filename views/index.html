@@ -158,6 +158,7 @@
 				  console.log(response);
 					tempUpdate(response);
 					proxUpdate(response);
+					soundUpdate(response);
 
 			}).catch(function(error){
 	          alert('Error');
@@ -200,6 +201,25 @@
 		});
 	}
 
+	function getSound() {
+
+		var ip = getIP();
+		fetch('http://' + ip + ':3000/query/sound')
+				.then(function(response){
+			return response.json();
+		})
+		.then(function(response){
+			console.log("Sound sensor");
+			console.log(response);
+			soundUpdate(response);
+
+		}).catch(function(error){
+			alert('Error');
+			console.log(error);
+		});
+
+	}
+
 	function tempUpdate(response) {
 
 		 document.getElementById('temperatureTimestamp').innerHTML = response.timeStamp;
@@ -232,8 +252,21 @@
 		document.getElementById('proximityValue').innerHTML = response.proximityValue;
 	}
 
-	function getSound() {
-		// Yet to be implemented
+	function soundUpdate(response) {
+
+		document.getElementById('soundTimestamp').innerHTML = response.timeStamp;
+		document.getElementById('soundState').innerHTML = response.soundState;
+		var myElement = document.querySelector("#soundState");
+		if(response.soundState === 'UNSAFE'){
+				myElement.style.color = '#F00';
+		}
+		else if(response.soundState === 'SAFE'){
+			myElement.style.color = '#5cb85c';
+		}
+		else if(response.soundState === 'WARNING'){
+			myElement.style.color = '#f0ad4e';
+		}
+		document.getElementById('soundValue').innerHTML = response.soundValue;
 	}
 
 	function sendMessage() {
