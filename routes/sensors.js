@@ -26,7 +26,7 @@ router.get('/:sensor', function(req, res, next) {
     jsonResponse.timeStamp = dateFormat(new Date(), "dddd, mmmm dS, yyyy, h:MM:ss TT");
     if(temp <= 15 || temp > 45){
       jsonResponse.tempState = 'CRITICAL';
-      sendMessage(credentials.number, credentials.tempString);
+      //sendMessage(credentials.number, credentials.tempString);
     }
     else if((temp > 15 && temp < 20) || (temp > 35 && temp <= 45))
       jsonResponse.tempState = 'WARNING';
@@ -42,7 +42,7 @@ router.get('/:sensor', function(req, res, next) {
     jsonResponse.timeStamp = dateFormat(new Date(), "dddd, mmmm dS, yyyy, h:MM:ss TT");
     if(proxValue >= 0.5){
 
-      sendMessage(credentials.number, credentials.proximityString);
+    //  sendMessage(credentials.number, credentials.proximityString);
       jsonResponse.proximityState = 'UNSAFE';
     }
     else
@@ -57,7 +57,7 @@ router.get('/:sensor', function(req, res, next) {
     jsonResponse.timeStamp = dateFormat(new Date(), "dddd, mmmm dS, yyyy, h:MM:ss TT");
     if(soundVal >= 1){
 
-      sendMessage(credentials.number, credentials.proximityString);
+  //    sendMessage(credentials.number, credentials.proximityString);
       jsonResponse.soundState = 'UNSAFE';
     }
     else if(soundVal > 0.3 && soundVal < 1)
@@ -68,7 +68,7 @@ router.get('/:sensor', function(req, res, next) {
   };
 
   var aggValues = function(){
-    
+
     var aggProx = utility.getAggregatedProximity();
     var aggTemp = utility.getAggregatedTemperature();
     var aggSound = utility.getAggregatedSound();

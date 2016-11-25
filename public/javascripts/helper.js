@@ -6,6 +6,7 @@
 */
 
 var express = require('express');
+var dht-sensor = require('dht-sensor');
 var credentials = require('./token.js');
 var mraa = require('mraa'); //require mraa
 
@@ -22,7 +23,11 @@ var utility = {
   getTemperature: function(){
     // var analogValue = tempPin.read() * 0.004882814;
     // return ((analogValue - 0.5) * 100);
+    var dhtValue = dht-sensor.read(11,2);
+    var tempVal = dhtValue.temperature;
 
+    console.log('Temp Value ', tempVal);
+    return tempVal;
     return Math.floor((Math.random() * 20) + 10);
   },
 
@@ -30,6 +35,8 @@ var utility = {
     // var proximityValue = proximity.read();
     // if(proximityValue === 1)
     //    buzzerPin.write(1);
+      // else
+      //   buzzerPin.write(0);
     // return proximityValue;
 
    return Math.floor((Math.random() * 100))%2;
